@@ -1,8 +1,8 @@
-% PLFARM
+# PLFARM
 
 helps you farming perl apps
 
-# Todo
+## Todo
 
 * installation documentation
 * translate perldoc from french to english
