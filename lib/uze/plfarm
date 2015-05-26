@@ -1,0 +1,163 @@
+# vim: sw=4
+
+: << '=cut'
+
+=head1 variables d'environement
+
+=over
+
+=item *
+
+ST_*  relatif au site utilisé par l'instance
+
+=item *
+
+RT_*  ???? c'est quoi déjà ?
+
+=head1 fonctions de gestion des instances RT
+
+=head2 dist/
+
+=head3 install $version
+
+télécharge et décompresse le tarball de la version $version de RT dans le store
+
+=cut
+
+ff   ()  { find "$@" -type f }
+U    ()  { vim "$@" -        }
+warn ()  { local r=$?; print -u2 "$*"; return $r }
+die  ()  { warn "$*"; exit }
+shush () { "$@" &> /dev/null }
+
+export RTFARM_DIST=~/dist
+
+dist/install () {
+
+    setopt localoptions xtrace
+    local version=${1?version number required}
+    local base=rt-$version
+    local dest=$RTFARM_DIST/$base
+
+    [[ -d $dest ]] && {
+	warn "already installed in $dest"
+	return
+    }
+
+    local url="http://download.bestpractical.com/pub/rt/release/rt-$version.tar.gz"
+    warn "downloading $url"
+
+    ( cd $RTFARM_DIST &&
+	curl -L $url | gzip -d | tar xf -
+	mv rt-$version $version )
+
+}
+
+site/set/all () {
+    site/set/defaults
+    site/set/perl5lib
+}
+
+site/set/defaults () {
+    site/set/credentials DB_USER DB_PASS
+    . $RTFARM_ROOT/etc/defaults/site
+}
+
+
+site/set/credentials () { { read $1; read $2 } <  ~/.credentials }
+site/set/perl5lib () {
+    # prepend site libs
+    perl5lib=(
+        $ST_ROOT/perl5
+        $ST_ROOT/lib
+        $perl5lib
+    )
+    # then uniq them
+    perl5lib=( ${(u)perl5lib} )
+}
+
+site/switch/on () {
+}
+
+site/enable ()  { ln -s ~/site/$1/rc/nginx ~/nginx/$1 }
+site/disable () { rm ~/nginx/$1 }
+
+site/install () {
+    setopt localoptions errreturn xtrace
+    . ./$1
+    mkdir -p $ST_ROOT
+    cp $1 $ST_ROOT/env
+    cd $RT_ROOT
+    ./configure $configure_options
+    make install
+}
+
+site/source () { source ~rt/site/${1:?site name expected}/env }
+site/cd     () { cd ~rt/site/${1:?site name expected} }
+site/go     () { cd ~rt/site/${1:?site name expected}; source env }
+
+site/fcgi () {
+	site/go $1;
+	site/fcgi/spawn $1
+}
+
+site/fcgi/spawn () {
+	spawn-fcgi -M770 -g www-data -n -s /tmp/rt.$1.sock -- $PWD/sbin/rt-server.fcgi
+}
+
+site/fcgi/safe/start () {
+	touch command/respawn
+	site/fcgi/spawn $1
+	while [[ -f command/respawn ]] {
+		perl sbin/rt-serializer --directory crash.$( date +%F%T )
+		site/fcgi/spawn $1
+	}
+}
+
+site/fcgi/safe/start () {
+	touch command/respawn
+	site/fcgi/spawn $1
+	while [[ -f command/respawn ]] {
+		perl sbin/rt-serializer --directory crash.$( date +%F%T )
+		site/fcgi/spawn $1
+	}
+}
+
+site/http () { site/go $1; perl sbin/rt-server "$@" }
+
+# site/mail/aliases/etc | sudo sh -c 'cat > /etc/aliases'
+
+site/mail/mk-aliases () {
+    warn "mk-aliases is depreacted, use site/aliases/etc instead"
+}
+
+site/mail/aliases/tada  () { print "tadaaaa" }
+site/mail/aliases/m4  () { M4PATH=~/scripts/m4/aliases:~/postfix m4 "$@" }
+site/mail/aliases/gen () { site/mail/aliases/m4 gen "$@" }
+site/mail/aliases/announce () { site/mail/aliases/gen announce "$@" }
+site/mail/aliases/etc () {
+    cat /etc/aliases.local
+    site/mail/aliases/gen ~/postfix/*(:t)
+}
+
+site/db () { sbin/rt-setup-database --action "$@" }
+
+rproc ()  { ps -Urt hopid,command }
+
+# BUG: /home/rt/site must rely on a variable!!
+
+rproc/.f/fcgis () {
+    sed -rn \
+    's#^(\d+) /usr/bin/perl -w /home/rt/site/([^/]+)/sbin/rt-server.fcgi#\1 \2#p'
+}
+
+rproc/.f/fcgi/pidof () {
+    sed -rn \
+    's#^(\d+) /usr/bin/perl -w /home/rt/site/'"$1"'/sbin/rt-server.fcgi#\1#;T;p;q'
+}
+
+function () {
+    eval rproc/$1' () { rproc | rproc/.f/'$1' "$@" }'
+} fcgis fcgi/pidof
+
+
