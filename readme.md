@@ -11,10 +11,15 @@ those or choose another one.
 
 Actually, an optimistic installation script (assuming you have a dedicated
 account using its home directory as working one) should be the one described in
-[optimistic.install](optimistic.install). so for a quick install, just run
+[optimistic.install](optimistic.install). so for a quick install, just pipe the 
+content of 
 
-    curl -sL https://raw.githubusercontent.com/eiro/uze-plfarm/master/optimistic.install |
-        sudo -iu rt sh
+    https://raw.githubusercontent.com/eiro/uze-plfarm/master/optimistic.install 
+
+to your rt user's zsh. as example:
+
+        sudo -iu rt zsh 
+        ssh rt@rtserver zsh
 
 ### fatpacked install 
 
@@ -64,3 +69,18 @@ finalize the site setup
 * LICENSE file
 * remove references to RT in variable and function names
   (this should be reusable in other contexts)
+* add a tool to check if required tools are available, basically
+
+    checklist() {
+        local cmd="$1"
+        local tool
+        while {read tool} {shush $=cmd $tool || warn $tool is missing}
+    }
+
+    checklist which <<TOOLS
+    zsh
+    curl
+    fcgi-spwan
+    cpanm
+    TOOLS
+
