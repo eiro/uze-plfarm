@@ -2,7 +2,18 @@
 
 : << '=cut'
 
-=head1 variables d'environement
+=head1 NAME
+
+PLFARM (for Perl Farming) is an attempt to create a simple tool to manage
+a large set of instances of a single application with multiple versions and
+large range of settings.
+
+Instances can be created, enabled, disabled, cloned, archived, deleted.
+
+The "crash test dummy" of of PLFARM was L<RT|https://www.bestpractical.com/>
+(based on a previous successfull experience with L<koha|http://koha-ils.org>).
+
+=head1 INSTALLATION 
 
 =over
 
@@ -23,14 +34,6 @@ RT_*  ???? c'est quoi déjà ?
 télécharge et décompresse le tarball de la version $version de RT dans le store
 
 =cut
-
-ff   ()  { find "$@" -type f }
-U    ()  { vim "$@" -        }
-warn ()  { local r=$?; print -u2 "$*"; return $r }
-die  ()  { warn "$*"; exit }
-shush () { "$@" &> /dev/null }
-
-export RTFARM_DIST=~/dist
 
 dist/install () {
 
@@ -74,9 +77,6 @@ site/set/perl5lib () {
     )
     # then uniq them
     perl5lib=( ${(u)perl5lib} )
-}
-
-site/switch/on () {
 }
 
 site/enable ()  { ln -s ~/site/$1/rc/nginx ~/nginx/$1 }
