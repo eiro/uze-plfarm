@@ -1,5 +1,5 @@
 xargs -n1 curl -sL <<LIBS > ~/.plfarm.zsh
-    https://raw.githubusercontent.com/eiro/uze-plfarm/master/zshenv.example.zsh
+    https://raw.githubusercontent.com/eiro/uze-plfarm/master/examples/zshenv
     https://raw.githubusercontent.com/eiro/uze/master/uze
     https://raw.githubusercontent.com/eiro/uze-plfarm/master/lib/uze/plfarm
 LIBS
@@ -8,4 +8,6 @@ loadme='. ~/.plfarm.zsh'
 { test -e ~/.zshenv && grep -qF "$loadme" ~/.zshenv } || 
     echo "$loadme" >> ~/.zshenv
 eval $loadme
-mkdir -p $RTFARM_DIST $RTFARM_SITE $RTFARM_NGINX
+defaults=$RTFARM_ROOT/etc/defaults
+mkdir -p $RTFARM_DIST $RTFARM_SITE $RTFARM_NGINX $defaults
+curl https://raw.githubusercontent.com/eiro/uze-plfarm/master/examples/default_site > $defaults/site

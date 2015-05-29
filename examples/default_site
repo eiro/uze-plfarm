@@ -1,0 +1,22 @@
+: ${RT_VER:=4.2.9}
+: ${RT_ROOT:=$RTFARM_DIST/$RT_VER}
+: ${ST_ROOT:=$RTFARM_SITE/$ST_NAME}
+: ${DB_TYPE:=Pg}
+: ${DB_NAME:=${ST_NAME//./_}}
+
+configure_options=(
+    --prefix=$ST_ROOT
+    --enable-developer
+    --enable-graphviz
+    --enable-gd
+    --enable-gpg
+    --enable-smime
+    --with-my-user-group
+    --with-web-handler=fastcgi
+    --with-db-type=$DB_TYPE
+    --with-db-host=$DB_HOST
+    --with-db-dba=postgres
+    --with-db-database=$DB_NAME
+    --with-db-rt-user=$DB_USER
+    --with-db-rt-pass=$DB_PASS
+)
