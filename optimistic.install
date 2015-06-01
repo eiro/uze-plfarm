@@ -1,6 +1,7 @@
 xargs -n1 curl -sL <<LIBS > ~/.plfarm.zsh
     https://raw.githubusercontent.com/eiro/uze-plfarm/master/examples/zshenv
     https://raw.githubusercontent.com/eiro/uze/master/uze
+    https://raw.githubusercontent.com/eiro/uze/master/p5/env
     https://raw.githubusercontent.com/eiro/uze-plfarm/master/lib/uze/plfarm
 LIBS
 loadme='. ~/.plfarm.zsh'

@@ -15,4 +15,6 @@ export RTFARM_DIST=${RTFARM_DIST:=$RTFARM_ROOT/store}
 export RTFARM_SITE=${RTFARM_SITE:=$RTFARM_ROOT/site}
 export RTFARM_NGINX=$RTFARM_ROOT/etc/nginx
 export RTFARM_SITES_ALL=$RTFARM_SITE/'*(N:r:t)'
-export RTFARM_NGINX_ON=$RTFARM_NGINX/'*(N:r:t)' 
+export RTFARM_NGINX_ON=$RTFARM_NGINX/'*(N:r:t)'
+
+p5/env/local
