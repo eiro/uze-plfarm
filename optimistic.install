@@ -10,4 +10,4 @@ loadme='. ~/.plfarm.zsh'
 eval $loadme
 defaults=$RTFARM_ROOT/etc/defaults
 mkdir -p $RTFARM_DIST $RTFARM_SITE $RTFARM_NGINX $defaults
-curl https://raw.githubusercontent.com/eiro/uze-plfarm/master/examples/default_site > $defaults/site
+curl -sL https://raw.githubusercontent.com/eiro/uze-plfarm/master/examples/default_site > $defaults/site
