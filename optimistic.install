@@ -13,5 +13,7 @@ rm -rf master.zip uze-plfarm-master
 wget https://github.com/eiro/uze-plfarm/archive/master.zip
 unzip master.zip
 skel=uze-plfarm-master/examples/rt4
-cp -r $skel/etc $RTFARM_ROOT/etc
+sket=$RTFARM_ROOT/etc
+[[ -d $sket ]] && mv $sket $sket.$(date +%F ).reinstall
+cp -r $skel/etc $sket
 cpanm < $skel/cpanm

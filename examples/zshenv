@@ -18,3 +18,5 @@ export RTFARM_SITES_ALL=$RTFARM_SITE/'*(N:r:t)'
 export RTFARM_NGINX_ON=$RTFARM_NGINX/'*(N:r:t)'
 
 p5/env/local
+export -UT M4PATH m4path
+m4path+=( $RTFARM_ROOT/etc/m4(N) )

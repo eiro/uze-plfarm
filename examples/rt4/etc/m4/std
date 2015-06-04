@@ -1,0 +1,6 @@
+divert(-1)
+define(`ENV',`syscmd(echo -n  $'`$1)')
+define(`DASHED',`syscmd(echo -n $'`$1|tr . - )')
+define(`_SITE',`ENV(ST_NAME)')
+define(`_STREAM',`DASHED(ST_NAME)')
+divert(0)dnl

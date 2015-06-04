@@ -1,0 +1,38 @@
+divert(-1)
+include(std) 
+
+TODO:
+ * the stragegy used in this file seems to be confirmed by 
+   https://gist.github.com/PWBENNETT/1f953487864109d56419 
+   investigate more
+ * how about adding workers in upstream ? 
+   * does it make sense (i think so)
+   * would it be safe (aka is it possible to launch more RT)
+ * ajouter des workers dans l'upstream? ca a du sens?
+   ca casse des trucs?
+
+divert(0)dnl
+
+upstream _STREAM {
+	server unix:/tmp/rt._SITE.sock;
+}
+
+server {
+	listen 80;
+	server_name vhost-_SITE;
+        root ENV(ST_ROOT)/share;
+
+	location /static {
+		allow all;
+		autoindex off;
+		expires max;
+		try_files $uri @_STREAM;
+	}
+
+	location / {
+	    set $path_info $uri;
+	    include fastcgi_params;
+	    fastcgi_param SCRIPT_NAME "";
+	    fastcgi_pass _STREAM;
+	}
+}
