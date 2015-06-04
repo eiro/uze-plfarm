@@ -79,6 +79,12 @@ site/set/perl5lib () {
     perl5lib=( ${(u)perl5lib} )
 }
 
+site/mk-nginx () {
+    (( $# )) && site/go $1
+    (( $+ST_NAME )) || die "no site loaded"
+    m4 nginx > $RTFARM_ROOT/etc/nginx/$ST_NAME
+}
+
 site/enable ()  { ln -s ~/site/$1/rc/nginx ~/nginx/$1 }
 site/disable () { rm ~/nginx/$1 }
 

@@ -1,9 +1,13 @@
-xargs -n1 curl -sL <<LIBS > ~/.plfarm.zsh
-    https://raw.githubusercontent.com/eiro/uze/master/p5/env
-    https://raw.githubusercontent.com/eiro/uze-plfarm/master/examples/zshenv
-    https://raw.githubusercontent.com/eiro/uze/master/uze
-    https://raw.githubusercontent.com/eiro/uze-plfarm/master/lib/uze/plfarm
-LIBS
+
+# xargs -n1 curl -sL <<LIBS > ~/.plfarm.zsh
+#     https://raw.githubusercontent.com/eiro/uze/master/p5/env
+#     https://raw.githubusercontent.com/eiro/uze-plfarm/master/examples/zshenv
+#     https://raw.githubusercontent.com/eiro/uze/master/uze
+#     https://raw.githubusercontent.com/eiro/uze-plfarm/master/lib/uze/plfarm
+# LIBS 
+
+cat ~/bin/uze/{uze,p5/env} examples/zshenv lib/uze/plfarm
+
 loadme='. ~/.plfarm.zsh'
 { test -e ~/.zshenv && grep -qF "$loadme" ~/.zshenv } || 
     echo "$loadme" >> ~/.zshenv 
@@ -14,6 +18,7 @@ wget https://github.com/eiro/uze-plfarm/archive/master.zip
 unzip master.zip
 skel=uze-plfarm-master/examples/rt4
 sket=$RTFARM_ROOT/etc
+mkdir -p $RTFARM_DIST $RTFARM_SITE $RTFARM_NGINX
 [[ -d $sket ]] && mv $sket $sket.$(date +%F ).reinstall
 cp -r $skel/etc $sket
 cpanm < $skel/cpanm
