@@ -9,7 +9,8 @@ loadme='. ~/.plfarm.zsh'
     echo "$loadme" >> ~/.zshenv 
 eval $loadme 
 cd /tmp
+rm -rf master.zip uze-plfarm-master
 wget https://github.com/eiro/uze-plfarm/archive/master.zip
-unzip master
-cp -r uze-plfarm-master/etc/rt4 $RTFARM_ROOT/etc
+unzip master.zip
+cp -r uze-plfarm-master/examples/rt4/etc $RTFARM_ROOT/etc
 cpanm < uze-plfarm-master/cpanm
