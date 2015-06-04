@@ -12,5 +12,6 @@ cd /tmp
 rm -rf master.zip uze-plfarm-master
 wget https://github.com/eiro/uze-plfarm/archive/master.zip
 unzip master.zip
-cp -r uze-plfarm-master/examples/rt4/etc $RTFARM_ROOT/etc
-cpanm < uze-plfarm-master/cpanm
+skel=uze-plfarm-master/examples/rt4
+cp -r $skel/etc $RTFARM_ROOT/etc
+cpanm < $skel/cpanm
