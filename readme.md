@@ -62,6 +62,13 @@ finalize the site setup
     vim etc/RT_SiteConfig.pm
     site/fcgi $s
 
+# install from a bundle
+
+    site/go oursite.example.com
+    data=/tmp/rt4.export.oursite.example.com.2015-06-04-16-45/data
+    ./sbin/rt-setup-database --action schema  
+    ./sbin/rt-importer -d $data
+
 ## Todo
 
 * variable documentations in the POD
